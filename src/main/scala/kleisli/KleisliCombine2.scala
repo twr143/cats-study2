@@ -9,4 +9,5 @@ import com.typesafe.scalalogging.LazyLogging
 object KleisliCombine2 extends App with LazyLogging with Common {
 
   val kleisliCombine_2 = Kleisli(generate) andThen Kleisli(process) andThen Kleisli(save)
+  
 }

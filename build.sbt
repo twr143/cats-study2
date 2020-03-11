@@ -11,3 +11,6 @@ libraryDependencies += "org.typelevel" %% "cats-free" % catsVersion
 libraryDependencies += "org.typelevel" %% "cats-effect" % catsVersion
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
+
+// https://mvnrepository.com/artifact/org.typelevel/cats-mtl-core
+libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
