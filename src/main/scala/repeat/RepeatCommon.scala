@@ -12,7 +12,7 @@ trait RepeatCommon extends StrictLogging {
 
   protected def runPeriodically[F[_] : Effect : Timer, T](errorMsg: String)(t: F[T]): F[Unit] = {
     var j = 0
-    (t >> Effect[F].pure {
+    (t >> Effect[F].delay {
       j += 1
     } >> Timer[F].sleep(200 millis))
       .handleError { e =>
@@ -21,25 +21,23 @@ trait RepeatCommon extends StrictLogging {
       .iterateWhile(_ => j <= 6)
   }
 
-  protected def firstTask[F[_] : Effect : Timer](counter: => Int): F[Unit] =
+  protected def firstTask[F[_] : Effect : Timer](counter: => Long): F[Unit] =
     runPeriodically[F, Unit]("no err")(Effect[F].delay {
-      println(s"i=$counter")
+      logger.info(s"i=$counter")
     })
 
-  protected def secondTask[F[_] : Effect : Timer](counter: => Int): F[Unit] =
+  protected def secondTask[F[_] : Effect : Timer](counter: => Long): F[Unit] =
     runPeriodically[F, Unit]("no err")(Effect[F].delay {
-      println(s"i=${counter + 10}")
+      logger.info(s"i=${counter + 100}")
     })
 }
 
 object RepeatCommon {
-
+  import java.util.concurrent.atomic.AtomicLong
   case object Counter {
-    var i=0
-    def get :Int = {
-      i+=1
-      i-1
-    }
-  }
 
+    var i = new AtomicLong(0)
+
+    def get: Long = i.incrementAndGet()
+  }
 }
