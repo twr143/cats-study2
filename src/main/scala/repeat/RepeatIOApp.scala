@@ -14,23 +14,27 @@ object RepeatIOApp extends IOApp with StrictLogging {
     par2(runPeriodically("no err")(IO {
       println(s"i=$i");
       i += 1
-    }),runPeriodically("no err")(IO {
-          println(s"i+10=${i+10}");
-        })).map(_ => {println("now both completed...");ExitCode.Success})
+    }), runPeriodically("no err")(IO {
+      println(s"i+10=${i + 10}");
+    })).map(_ => {
+      println("now both completed...");
+      ExitCode.Success
+    })
   }
+
   def par2[A, B](ioa: IO[A], iob: IO[B]): IO[(A, B)] =
     (ioa.start, iob.start).tupled.bracket { case (fa, fb) =>
       (fa.join, fb.join).tupled
     } { case (fa, fb) => fa.cancel >> fb.cancel }
 
-  private def runPeriodically[T](errorMsg: String)(t: IO[T]): IO[Option[Unit]] = {
+  private def runPeriodically[F[_] : Effect : Timer, T](errorMsg: String)(t: F[T]): F[Unit] = {
     var j = 0
-    (t >> IO {
+    (t >> Effect[F].pure {
       j += 1
-    } >> IO.sleep(200 millis))
+    } >> Timer[F].sleep(200 millis))
       .handleError { e =>
         logger.error(errorMsg, e)
       }
-      .untilM[Option](IO(j > 9))
+      .iterateWhile(_ => j <= 6)
   }
 }
