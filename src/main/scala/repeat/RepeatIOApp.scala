@@ -11,21 +11,26 @@ object RepeatIOApp extends IOApp with StrictLogging {
 
   def run(args: List[String]): IO[ExitCode] = {
     var i = 0;
-    runForeverPeriodically("no err")(IO {
+    par2(runPeriodically("no err")(IO {
       println(s"i=$i");
       i += 1
-    }).flatMap(_.join).map(_ => ExitCode.Success)
+    }),runPeriodically("no err")(IO {
+          println(s"i+10=${i+10}");
+        })).map(_ => {println("now both completed...");ExitCode.Success})
   }
+  def par2[A, B](ioa: IO[A], iob: IO[B]): IO[(A, B)] =
+    (ioa.start, iob.start).tupled.bracket { case (fa, fb) =>
+      (fa.join, fb.join).tupled
+    } { case (fa, fb) => fa.cancel >> fb.cancel }
 
-  private def runForeverPeriodically[T](errorMsg: String)(t: IO[T]): IO[Fiber[IO, Option[Unit]]] = {
+  private def runPeriodically[T](errorMsg: String)(t: IO[T]): IO[Option[Unit]] = {
     var j = 0
     (t >> IO {
       j += 1
-    } >> IO.sleep(500 millis))
+    } >> IO.sleep(200 millis))
       .handleError { e =>
         logger.error(errorMsg, e)
       }
-      .untilM[Option](IO(j > 5))
-      .start
+      .untilM[Option](IO(j > 9))
   }
 }
