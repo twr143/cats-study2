@@ -14,3 +14,7 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 
 // https://mvnrepository.com/artifact/org.typelevel/cats-mtl-core
 libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
+val fs2Deps = Seq(
+  "co.fs2" %% "fs2-reactive-streams" % "2.1.0"
+)
+libraryDependencies ++= fs2Deps
