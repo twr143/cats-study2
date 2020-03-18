@@ -14,7 +14,7 @@ trait RepeatCommon extends StrictLogging {
     var j = 0
     (t >> Effect[F].delay {
       j += 1
-    } >> Timer[F].sleep(200 millis))
+    } >> Timer[F].sleep(100 millis))
       .handleError { e =>
         logger.error(errorMsg, e)
       }
