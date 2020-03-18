@@ -1,5 +1,6 @@
 import Dependencies._
 
+resolvers += ("typesafe-releases" at "http://repo.typesafe.com/typesafe/releases").withAllowInsecureProtocol(true)
 val catsVersion = "2.0.0"
 val freesVersion = "0.8.2"
 organization := "com.iv"
@@ -18,3 +19,4 @@ val fs2Deps = Seq(
   "co.fs2" %% "fs2-reactive-streams" % "2.1.0"
 )
 libraryDependencies ++= fs2Deps
+libraryDependencies +="io.monix" %% "monix" % "3.1.0"
