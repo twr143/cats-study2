@@ -19,4 +19,6 @@ val fs2Deps = Seq(
   "co.fs2" %% "fs2-reactive-streams" % "2.1.0"
 )
 libraryDependencies ++= fs2Deps
-libraryDependencies +="io.monix" %% "monix" % "3.1.0"
+libraryDependencies += "io.monix" %% "monix" % "3.1.0"
+// https://mvnrepository.com/artifact/com.github.fd4s/fs2-kafka
+libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
