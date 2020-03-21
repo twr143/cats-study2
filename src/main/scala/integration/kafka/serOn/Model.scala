@@ -5,6 +5,8 @@ package integration.kafka.serOn
   */
 object Model {
   case class Address(no: Int, street: String)
-  case class Person(name: String, address: Address)
+  sealed trait Human
+  case class Person(name: String, address: Address) extends Human
+  case class Person2(name: String, address: Address, sex: Boolean) extends Human
 
 }

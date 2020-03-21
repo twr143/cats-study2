@@ -26,3 +26,4 @@ libraryDependencies += "io.monix" %% "monix" % "3.1.0"
 libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
 // https://mvnrepository.com/artifact/com.twitter/chill
 libraryDependencies += "com.twitter" %% "chill-bijection" % "0.9.5"
+javacOptions ++= Seq("-encoding", "UTF-8")

@@ -5,7 +5,7 @@ import cats.effect.{ExitCode, IO, IOApp}
 import com.twitter.bijection.GZippedBytes
 import fs2.Stream
 import fs2.kafka._
-import integration.kafka.serOn.Model.{Address, Person}
+import integration.kafka.serOn.Model.{Address, Person, Person2}
 import com.twitter.chill.KryoInjection
 import com.twitter.bijection.Bijection._
 
@@ -16,19 +16,19 @@ object ProdApp extends IOApp {
   override def run(args: List[String]): IO[ExitCode] = {
 
 //    val tryDecode: scala.util.Try[Any] = KryoInjection.invert(bytes)
-    val valueS = Serializer.instance[IO, Person] { (topic, headers, p) =>
+    val valueS = Serializer.instance[IO, Person2] { (topic, headers, p) =>
       IO.pure {
         val ori = KryoInjection(p)
         val array = (KryoInjection andThen bytes2GzippedBytes)(p).bytes
-        println(s"gzipped array siz:${array.length}, ori size: ${ori.length}")
+        println(s"раз дваgzipped array siz:${array.length}, ori size: ${ori.length}")
         array
       }
     }
-    val producerSettings = ProducerSettings[IO, String, Person](keySerializer = Serializer[IO, String], valueSerializer = valueS)
+    val producerSettings = ProducerSettings[IO, String, Person2](keySerializer = Serializer[IO, String], valueSerializer = valueS)
       .withBootstrapServers("localhost:9093")
-    val s = Stream(20, 21, 22)
+    val s = Stream(6, 7, 8)
       .map(i =>
-        Person(
+        Person2(
           "n:;dlskajfl;ksjfljh1827098 7oi;lkjs;fkas;/lfj27rlakf;ll21fafa08sd7f-a7sdf8asdof78fodpfoasdfp9839099a99087" + i,
           address = Address(
             i,
@@ -43,7 +43,8 @@ object ProdApp extends IOApp {
               "фывлдаывдфаодывжлаоы" +
               "жывлоаждылаожфдывлао" +
               ";fksas'asfa'slfka's;dlfka;'slfka;slkf'asld;fa;'slkf'a;sldkfa;'slfk';sk"
-          )
+          ),
+          true
         )
       )
       .evalMap(p =>
@@ -54,7 +55,7 @@ object ProdApp extends IOApp {
           )
         )
       )
-      .through(produce[IO, String, Person, Unit](producerSettings))
+      .through(produce[IO, String, Person2, Unit](producerSettings))
 
     s.compile.drain.map(_ => ExitCode.Success)
 
