@@ -14,7 +14,7 @@ object KafkaDemoConsumer extends IOApp with StrictLogging {
     ConsumerSettings[IO, String, String]
       .withAutoOffsetReset(AutoOffsetReset.Earliest)
       .withBootstrapServers("localhost:9093")
-      .withGroupId("group")
+      .withGroupId("group2")
   def processRecord(record: ConsumerRecord[String, String]): IO[Unit] =
     IO.pure(logger.info(s"${record.key -> record.value}"))
 

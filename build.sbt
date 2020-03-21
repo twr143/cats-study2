@@ -1,6 +1,8 @@
 import Dependencies._
 
 resolvers += ("typesafe-releases" at "http://repo.typesafe.com/typesafe/releases").withAllowInsecureProtocol(true)
+resolvers += ("mvn-arts" at "https://mvnrepository.com/artifact/").withAllowInsecureProtocol(true)
+
 val catsVersion = "2.0.0"
 val freesVersion = "0.8.2"
 organization := "com.iv"
@@ -22,3 +24,5 @@ libraryDependencies ++= fs2Deps
 libraryDependencies += "io.monix" %% "monix" % "3.1.0"
 // https://mvnrepository.com/artifact/com.github.fd4s/fs2-kafka
 libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
+// https://mvnrepository.com/artifact/com.twitter/chill
+libraryDependencies += "com.twitter" %% "chill-bijection" % "0.9.5"
