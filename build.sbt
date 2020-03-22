@@ -27,3 +27,7 @@ libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
 // https://mvnrepository.com/artifact/com.twitter/chill
 libraryDependencies += "com.twitter" %% "chill-bijection" % "0.9.5"
 javacOptions ++= Seq("-encoding", "UTF-8")
+libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
+PB.targets in Compile := Seq(
+  scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "kafka" / "serOn" / "protobuf" / "model").value
+)
