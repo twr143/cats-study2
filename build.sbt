@@ -31,3 +31,4 @@ libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.com
 PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "kafka" / "serOn" / "protobuf" / "model").value
 )
+libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.5"
