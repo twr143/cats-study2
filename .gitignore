@@ -8,7 +8,12 @@ random.txt
 replay_pid11076.log
 replay_pid11484.log
 replay_pid7720.log
+*.class
+*.log
+project/
 target/
-
+.bloop/
+.metals/
+.vscode/
 /.idea/
 !/.gitignore

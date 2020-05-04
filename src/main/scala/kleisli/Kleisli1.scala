@@ -11,6 +11,7 @@ object Kleisli1 extends App with LazyLogging with Common {
             number <- generate()
             processed <- process(number)
             result <- save(processed)
+            _<- confirm(result)
           } yield result
         }
         comboForComp().unsafeRunSync()

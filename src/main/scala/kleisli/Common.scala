@@ -9,5 +9,6 @@ trait Common {
   val generate: Unit => IO[Int] = _ => IO.pure(r.nextInt(100))
    val process: Int => IO[Double] = num => IO.pure(num * math.Pi)
    val save: Double => IO[Boolean] = number => IO.pure(true)
+   val confirm: Boolean => IO[Boolean] = _ => IO.pure(true)
 
 }
