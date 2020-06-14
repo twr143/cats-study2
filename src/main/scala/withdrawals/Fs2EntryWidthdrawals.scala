@@ -5,6 +5,7 @@ import cats.effect.{ContextShift, ExitCode, Timer}
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
 import fs2._
+import fs2.concurrent.SignallingRef
 
 import scala.collection.mutable
 import scala.concurrent.duration._
@@ -39,12 +40,15 @@ object Fs2EntryWidthdrawals extends App with Repository {
     Task.sleep(300 millis) >> Task(())
   }
 
-  val s = Stream
+  val signal = SignallingRef[Task, Boolean](false).runSyncUnsafe()
+  val _timer = Stream.sleep(2500 millis).flatMap(_ => Stream.eval(signal.set(true)).flatMap(_ => Stream.emit(println("Finish")).covary[Task]))
+  val s = _timer concurrently Stream
     .emit(List[Char]('a', 'b', 'c', 'd'))
     .repeat
     .flatMap(l => Stream.chunk(Chunk.seq(l)))
     .metered[Task](600.millis)
     .take(size)
+    .interruptWhen(signal)
     .covary[Task]
     .evalScan((0L, List.empty[Withdrawal])) {
       case ((lastReadId, _), _) =>
@@ -54,7 +58,7 @@ object Fs2EntryWidthdrawals extends App with Repository {
     .map {
       case chunk =>
         val m = mutable.Map.empty[Int, Set[Withdrawal]]
-        chunk.foreach { case (amt, lst) => lst.foreach(w => updateValue(m, w.groupId, Set.empty[Withdrawal])(_ + w)) }; m
+        chunk.foreach { case (_, lst) => lst.foreach(w => updateValue(m, w.groupId, Set.empty[Withdrawal])(_ + w)) }; m
     }
     .mapAsyncUnordered(8) { m =>
       Task
