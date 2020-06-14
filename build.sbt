@@ -14,7 +14,7 @@ libraryDependencies += "org.typelevel" %% "cats-free" % catsVersion
 libraryDependencies += "org.typelevel" %% "cats-effect" % catsVersion
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
-libraryDependencies +="org.scalatest" %% "scalatest" % "3.0.8" % Test
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
 // https://mvnrepository.com/artifact/org.typelevel/cats-mtl-core
 libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
 val fs2Deps = Seq(
@@ -32,3 +32,5 @@ PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "kafka" / "serOn" / "protobuf" / "model").value
 )
 libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.5"
+libraryDependencies += "com.github.cb372" %% "scalacache-cats-effect" % "0.28.0"
+libraryDependencies += "com.github.cb372" %% "scalacache-redis" % "0.28.0"
