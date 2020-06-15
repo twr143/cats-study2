@@ -10,6 +10,8 @@ import monix.execution.Scheduler.Implicits.global
 import scalacache._
 import scalacache.redis.RedisCache
 import scalacache.serialization.Codec
+import _root_.redis.clients.jedis._
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 
 import scala.concurrent.duration._
 
@@ -30,29 +32,35 @@ object MultipleCachesInResource extends App {
       Codec.tryDecode((GZippedBytes.apply _ andThen bytes2GzippedBytes.invert andThen KryoInjection.invert)(bytes).get.asInstanceOf[Animal])
   }
 
-  implicit val redisCache: Cache[Animal] = RedisCache("localhost", 6379)
+  implicit val redisCache: Cache[Animal] = RedisCache(new JedisPool(new GenericObjectPoolConfig(), "localhost", 6379, Protocol.DEFAULT_TIMEOUT, null, 0))
 
   (for {
     animals <- Task { (Cat(1, "ilyaBarsik", "black"), Dog(1, "ilyaSharick", "white")) }
-    _ <- redisCache.put("$cat$" + animals._1.id)(animals._1, Some(1 second))
+    _ <- redisCache.put("$cat$" + animals._1.id)(animals._1, Some(2 second))
     _ <- redisCache.put("$dog$" + animals._2.id)(animals._2, Some(1 second))
     _ <- Task.sleep(500 millis)
-    _ <- get("$cat$" + animals._1.id).map {
+    _ <- redisCache.get("$cat$" + animals._1.id).map {
       case Some(c: Cat) => Task.now(println(s"cat $c found"))
       case None         => Task.now(println(s"no cats found "))
       case a            => Task.now(println(s"cat/dgo $a found"))
     }
-    _ <- get("$dog$" + animals._2.id).map {
+    _ <- redisCache.get("$dog$" + animals._2.id).map {
       case Some(d: Dog) => Task.now(println(s"dog $d found"))
       case None         => Task.now(println(s"no dogs found "))
       case a            => Task.now(println(s"cat/dgo $a found"))
     }
     _ <- Task.sleep(600 millis)
-    _ <- get("$cat$" + animals._1.id)
+    _ <- redisCache
+      .get("$cat$" + animals._1.id)
       .map {
         case Some(c) => println(s"cat $c found")
         case None    => println(s"no cats found ")
       }
-
+    _ <- redisCache.get("$dog$" + animals._2.id).map {
+      case Some(d: Dog) => Task.now(println(s"dog $d found"))
+      case None         => Task.now(println(s"no dogs found "))
+      case a            => Task.now(println(s"cat/dgo $a found"))
+    }
+    _ <- redisCache.close()
   } yield ()).runSyncUnsafe()
 }

@@ -5,10 +5,11 @@ import caching.model.Cat
 import cats.effect.{ContextShift, Timer}
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
+import org.apache.commons.pool2.impl.GenericObjectPoolConfig
 import scalacache._
 import scalacache.redis.RedisCache
+import _root_.redis.clients.jedis._
 import scalacache.serialization.binary._
-
 import scala.concurrent.duration._
 
 /**
