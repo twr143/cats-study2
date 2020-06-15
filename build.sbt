@@ -36,3 +36,4 @@ libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.5"
 libraryDependencies += "com.github.cb372" %% "scalacache-cats-effect" % scalaCacheVersion
 libraryDependencies += "com.github.cb372" %% "scalacache-redis" % scalaCacheVersion
 libraryDependencies += "com.github.cb372" %% "scalacache-guava" % scalaCacheVersion
+libraryDependencies += "com.github.cb372" %% "scalacache-caffeine" % scalaCacheVersion

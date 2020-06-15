@@ -1,4 +1,5 @@
-package caching.guava
+package caching.caffein
+
 import java.util.concurrent.TimeUnit
 import caching.model._
 
@@ -7,16 +8,14 @@ import cats.effect.{ContextShift, Timer}
 import com.typesafe.scalalogging.StrictLogging
 import monix.eval.Task
 import monix.execution.Scheduler.Implicits.global
-import scalacache.serialization.binary._
-
 import scala.concurrent.duration._
-import scalacache.guava._
-import com.google.common.cache.CacheBuilder
+import scalacache.caffeine._
+import com.github.benmanes.caffeine.cache.Caffeine
 
 /**
   * Created by Ilya Volynin on 15.06.2020 at 9:26.
   */
-object GuavaCEE1 extends App with StrictLogging {
+object CaffeinCEE1 extends App with StrictLogging {
   implicit val cs: ContextShift[Task] = Task.contextShift(global)
 
   implicit val timer: Timer[Task] = Task.timer(global)
@@ -28,8 +27,8 @@ object GuavaCEE1 extends App with StrictLogging {
   val d1 = Dog(1, "ilya2Sharik", "white")
 
   (for {
-    cacheCat <- Task.delay(CacheBuilder.newBuilder().maximumSize(10000L).build[String, Entry[Cat]]).map(GuavaCache(_))
-    cacheDog <- Task.delay(CacheBuilder.newBuilder().maximumSize(10000L).expireAfterWrite(1, TimeUnit.SECONDS).build[String, Entry[Dog]]).map(GuavaCache(_))
+    cacheCat <- Task.delay(Caffeine.newBuilder().maximumSize(10000L).build[String, Entry[Cat]]).map(CaffeineCache(_))
+    cacheDog <- Task.delay(Caffeine.newBuilder().maximumSize(10000L).expireAfterWrite(1, TimeUnit.SECONDS).build[String, Entry[Dog]]).map(CaffeineCache(_))
     _ <- cacheCat.put(c1.id)(c1, Some(2 second)) //(catMode, Flags.defaultFlags)
     _ <- cacheDog.put(d1.id)(d1, Some(1 second)) //(dogMode, Flags.defaultFlags)
     _ <- Task.sleep(500 millis)
@@ -50,6 +49,8 @@ object GuavaCEE1 extends App with StrictLogging {
       case Some(d) => logger.info(s"dog $d found")
       case None    => logger.info(s"no dogs found ")
     }
+    _ <- cacheCat.close()
+    _ <- cacheDog.close()
 
   } yield ()).runSyncUnsafe()
 
