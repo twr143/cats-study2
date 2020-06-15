@@ -51,7 +51,8 @@ object TwoRedisCaches extends App {
       case Some(d) => println(s"dog $d found")
       case None    => println(s"no dogs found ")
     }
-
+    _ <- catCache.close()
+    _ <- dogCache.close()
   } yield ()).runSyncUnsafe()
 
 }
