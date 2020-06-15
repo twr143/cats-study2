@@ -30,8 +30,8 @@ object TwoRedisCaches extends App {
   val d1 = Dog(1, "ilya2Sharik", "white")
 
   (for {
-    _ <- catCache.put[Task](c1.id)(c1, Some(1 second))(catMode, Flags.defaultFlags)
-    _ <- dogCache.put[Task](d1.id)(d1, Some(1 second))(dogMode, Flags.defaultFlags)
+    _ <- catCache.put(c1.id)(c1, Some(1 second))(catMode, Flags.defaultFlags)
+    _ <- dogCache.put(d1.id)(d1, Some(1 second))(dogMode, Flags.defaultFlags)
     _ <- Task.sleep(500 millis)
     _ <- get(c1.id)(catCache, catMode, Flags.defaultFlags).map {
       case Some(c) => println(s"cat $c found")

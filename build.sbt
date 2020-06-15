@@ -9,6 +9,7 @@ organization := "com.iv"
 scalaVersion := "2.12.10"
 version := "0.1.0-SNAPSHOT"
 name := "cats-study2"
+val scalaCacheVersion = "0.28.0"
 //libraryDependencies += "org.typelevel" %% "cats-core" % catsVersion
 libraryDependencies += "org.typelevel" %% "cats-free" % catsVersion
 libraryDependencies += "org.typelevel" %% "cats-effect" % catsVersion
@@ -32,5 +33,6 @@ PB.targets in Compile := Seq(
   scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "kafka" / "serOn" / "protobuf" / "model").value
 )
 libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.5"
-libraryDependencies += "com.github.cb372" %% "scalacache-cats-effect" % "0.28.0"
-libraryDependencies += "com.github.cb372" %% "scalacache-redis" % "0.28.0"
+libraryDependencies += "com.github.cb372" %% "scalacache-cats-effect" % scalaCacheVersion
+libraryDependencies += "com.github.cb372" %% "scalacache-redis" % scalaCacheVersion
+libraryDependencies += "com.github.cb372" %% "scalacache-guava" % scalaCacheVersion
