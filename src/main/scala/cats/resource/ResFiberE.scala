@@ -1,5 +1,4 @@
 package cats.resource
-import cats.implicits._
 import cats.effect._
 import com.typesafe.scalalogging.StrictLogging
 import monix.eval.{Fiber, Task}
