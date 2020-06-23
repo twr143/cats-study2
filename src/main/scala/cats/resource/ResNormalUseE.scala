@@ -10,7 +10,7 @@ import scala.concurrent.duration._
 /**
   * Created by Ilya Volynin on 22.06.2020 at 12:24.
   */
-object ResE1 extends App with StrictLogging {
+object ResNormalUseE extends App with StrictLogging {
   implicit val cs: ContextShift[Task] = Task.contextShift(global)
 
   implicit val timer: Timer[Task] = Task.timer(global)
