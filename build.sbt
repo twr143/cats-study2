@@ -17,6 +17,10 @@ val scalaCacheVersion = "0.28.0"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.8" % Test
+// https://mvnrepository.com/artifact/io.7mind.izumi/distage-model
+// https://mvnrepository.com/artifact/io.7mind.izumi/distage-framework
+libraryDependencies += "io.7mind.izumi" %% "distage-framework" % "0.10.19"
+
 // https://mvnrepository.com/artifact/org.typelevel/cats-mtl-core
 //libraryDependencies += "org.typelevel" %% "cats-mtl-core" % "0.7.0"
 //val fs2Deps = Seq(
