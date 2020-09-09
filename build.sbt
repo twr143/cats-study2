@@ -3,6 +3,7 @@ import Dependencies._
 resolvers += ("typesafe-releases" at "http://repo.typesafe.com/typesafe/releases").withAllowInsecureProtocol(true)
 resolvers += ("mvn-arts" at "https://mvnrepository.com/artifact/").withAllowInsecureProtocol(true)
 
+ThisBuild / useCoursier := false
 //val catsVersion = "2.0.0"
 //val freesVersion = "0.8.2"
 organization := "com.iv"

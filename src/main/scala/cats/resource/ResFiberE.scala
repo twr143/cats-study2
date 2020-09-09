@@ -43,11 +43,12 @@ object ResFiberE extends StrictLogging {
         //  (res, res2).mapN((_, _)).use {
         case (r, r2) =>
           for {
-            j <- r.join
             j2 <- r2.join
+            j3 <- r2.join
             _ <- Task {
-              logger.info("res use {} {}", j, j2)
+              logger.info("res2 double use {} {}", j2, j3)
             }
+            j <- r.join
             _ <- Task.raiseError[Unit](new Exception("BOOM 2!"))
             _ <- Task {
               logger.info("done")
