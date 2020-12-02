@@ -1,4 +1,5 @@
 package integration.grpc
+import cats.implicits._
 import cats.effect.{ExitCode, IO, IOApp}
 import grpc.model.hello.{GreeterFs2Grpc, HelloRequest}
 import io.grpc._
@@ -21,6 +22,18 @@ object Client extends IOApp {
     for {
       response <- helloStub.sayHello(HelloRequest("Ilyusha V"), new Metadata())
       _ <- IO(println(response.greeting))
+      _ <- helloStub
+        .sayHelloStream(
+          Stream
+            .iterate(0)(_ + 1)
+            .map(a => HelloRequest(a.toString))
+            .take(10000),
+          new Metadata()
+        )
+        .map(r => print(r.greeting + " "))
+        .compile
+        .drain
+
     } yield ()
   }
 
