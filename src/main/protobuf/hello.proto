@@ -4,6 +4,7 @@ package grpc.model;
 
 message HelloRequest {
   string name = 1;
+  fixed32 serial = 2;
 }
 
 message HelloResponse {

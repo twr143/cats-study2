@@ -26,11 +26,11 @@ object Client extends IOApp {
         .sayHelloStream(
           Stream
             .iterate(0)(_ + 1)
-            .map(a => HelloRequest(a.toString))
-            .take(10000),
+            .map(a => HelloRequest("blah", a))
+            .take(3000),
           new Metadata()
         )
-        .map(r => print(r.greeting + " "))
+        .map(r => println(r.greeting))
         .compile
         .drain
 

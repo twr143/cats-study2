@@ -4,6 +4,7 @@ package integration.grpc
   * Created by Ilya Volynin on 02.12.2020 at 9:12.
   */
 import cats.effect.{ExitCode, IO, IOApp}
+import com.typesafe.scalalogging.StrictLogging
 import fs2._
 import io.grpc._
 import io.grpc.protobuf.services.ProtoReflectionService
@@ -12,10 +13,10 @@ import org.lyranthe.fs2_grpc.java_runtime.implicits._
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-object Server extends IOApp {
+object Server extends IOApp with StrictLogging {
   class ExampleImplementation extends GreeterFs2Grpc[IO, Metadata] {
     override def sayHello(request: HelloRequest, clientHeaders: Metadata): IO[HelloResponse] = {
-      IO(HelloResponse("Request name is: " + request.name))
+      IO(HelloResponse("Serial is: " + request.serial))
     }
 
     override def sayHelloStream(request: Stream[IO, HelloRequest], clientHeaders: Metadata): Stream[IO, HelloResponse] = {
@@ -31,7 +32,14 @@ object Server extends IOApp {
       .addService(ProtoReflectionService.newInstance())
       .stream[IO]
       .evalMap(server => IO(server.start()))
-      .evalMap(_ => IO.never)
+      .evalMap(_ =>
+        IO {
+          logger.warn(s"${System.getProperty("os.name")} Press Ctrl+Z to exit...")
+          while (System.in.read() != -1) {}
+          logger.warn("Received end-of-file on stdin. Exiting")
+          // optional shutdown code here
+        }
+      )
       .compile
       .drain
       .map(_ => ExitCode.Success)
