@@ -33,12 +33,19 @@ libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
 // https://mvnrepository.com/artifact/com.twitter/chill
 libraryDependencies += "com.twitter" %% "chill-bijection" % "0.9.5"
 javacOptions ++= Seq("-encoding", "UTF-8")
-libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
-PB.targets in Compile := Seq(
-  scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "kafka" / "serOn" / "protobuf" / "model").value
-)
+enablePlugins(Fs2Grpc)
+scalapbCodeGeneratorOptions += CodeGeneratorOption.Fs2Grpc
+//libraryDependencies += "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf"
+//PB.targets in Compile := Seq(
+//  scalapb.gen() -> (sourceDirectory in Compile)(_ / "scala" / "integration" / "model").value
+//)
 libraryDependencies += "com.lihaoyi" %% "upickle" % "0.9.5"
 libraryDependencies += "com.github.cb372" %% "scalacache-cats-effect" % scalaCacheVersion
 libraryDependencies += "com.github.cb372" %% "scalacache-redis" % scalaCacheVersion
 libraryDependencies += "com.github.cb372" %% "scalacache-guava" % scalaCacheVersion
 libraryDependencies += "com.github.cb372" %% "scalacache-caffeine" % scalaCacheVersion
+libraryDependencies ++= List(
+  "io.grpc" % "grpc-netty" % scalapb.compiler.Version.grpcJavaVersion,
+  "io.grpc" % "grpc-services" % scalapb.compiler.Version.grpcJavaVersion
+)
+libraryDependencies += "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion

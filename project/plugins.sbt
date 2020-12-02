@@ -1,5 +1,6 @@
 //addCompilerPlugin("org.scalameta" %% "paradise" % "3.0.0-M11" cross CrossVersion.full)
 //addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.9.2")
-addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.28")
+//addSbtPlugin("com.thesamet" % "sbt-protoc" % "0.99.28")
 addSbtPlugin("ch.epfl.scala" % "sbt-bloop" % "1.4.0-RC1")
 addSbtPlugin("net.virtual-void" % "sbt-dependency-graph" % "0.10.0-RC1")
+addSbtPlugin("org.lyranthe.fs2-grpc" % "sbt-java-gen" % "0.8.0")
