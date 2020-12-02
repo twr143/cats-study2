@@ -28,7 +28,6 @@ object Server extends IOApp {
     ServerBuilder
       .forPort(9999)
       .addService(helloService)
-      //            .asInstanceOf[ServerBuilder[ServerServiceDefinition]]
       .addService(ProtoReflectionService.newInstance())
       .stream[IO]
       .evalMap(server => IO(server.start()))
