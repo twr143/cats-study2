@@ -12,9 +12,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
   * Created by Ilya Volynin on 02.12.2020 at 12:15.
   */
 object Client extends IOApp {
+  val address = "127.0.0.1:8081"
   val managedChannelStream: Stream[IO, ManagedChannel] =
     ManagedChannelBuilder
-      .forAddress("127.0.0.1", 9999)
+      .forTarget(address)
+      .defaultLoadBalancingPolicy("round_robin")
       .usePlaintext()
       .stream[IO]
 
@@ -27,7 +29,7 @@ object Client extends IOApp {
           Stream
             .iterate(0)(_ + 1)
             .map(a => HelloRequest("blah", a))
-            .take(3000),
+            .take(10),
           new Metadata()
         )
         .map(r => println(r.greeting))
@@ -41,7 +43,9 @@ object Client extends IOApp {
     (for {
       managedChannel <- managedChannelStream
       helloStub = GreeterFs2Grpc.stub[IO](managedChannel)
+      helloStu2 = GreeterFs2Grpc.stub[IO](managedChannel)
       _ <- Stream.eval(runProgram(helloStub))
+      _ <- Stream.eval(runProgram(helloStu2))
     } yield ExitCode.Success).compile.drain
       .map(_ => ExitCode.Success)
 
