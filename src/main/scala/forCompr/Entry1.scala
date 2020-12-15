@@ -1,5 +1,7 @@
 package forCompr
 import cats.Monad
+import cats.implicits._
+import fs2._
 
 /**
   * Created by Ilya Volynin on 04.01.2020 at 13:19.
@@ -34,5 +36,14 @@ object Entry1 {
   }
 
   def main(args: Array[String]): Unit = {
+    val res = Stream
+      .range(1, 4, 1)
+      .map(i => List(i * 5, i * 5 - 1, i * 5 - 2, i * 5 - 3, i * 5 - 4))
+      .flatMap(lst => Stream.chunk(Chunk.seq(lst)))
+      .fold("")(_ + " " + _)
+      .compile
+      .last
+      .getOrElse("")
+    println(s"res=$res")
   }
 }
