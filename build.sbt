@@ -49,3 +49,5 @@ libraryDependencies ++= List(
   "io.grpc" % "grpc-services" % scalapb.compiler.Version.grpcJavaVersion
 )
 libraryDependencies += "io.grpc" % "grpc-netty-shaded" % scalapb.compiler.Version.grpcJavaVersion
+fork in run := true
+envVars := Map("test_var" -> "test_val")
