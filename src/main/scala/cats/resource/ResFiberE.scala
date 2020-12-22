@@ -2,8 +2,8 @@ package cats.resource
 import cats.effect.Resource
 import com.typesafe.scalalogging.StrictLogging
 import monix.eval.{Fiber, Task}
-import monix.execution.Scheduler.Implicits.global
 
+import monix.execution.Scheduler.Implicits.global
 import scala.concurrent.duration._
 import cats.implicits._
 

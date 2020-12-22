@@ -1,7 +1,10 @@
 package forCompr
 import cats.Monad
-import cats.implicits._
 import fs2._
+import monix.eval.Task
+import monix.execution.Scheduler.Implicits.global
+import scala.concurrent.duration._
+import cats.implicits._
 
 /**
   * Created by Ilya Volynin on 04.01.2020 at 13:19.
@@ -36,7 +39,7 @@ object Entry1 {
   }
 
   def main(args: Array[String]): Unit = {
-    val res = Stream
+    /*    val res = Stream
       .range(1, 4, 1)
       .map(i => List(i * 5, i * 5 - 1, i * 5 - 2, i * 5 - 3, i * 5 - 4))
       .flatMap(lst => Stream.chunk(Chunk.seq(lst)))
@@ -44,6 +47,18 @@ object Entry1 {
       .compile
       .last
       .getOrElse("")
-    println(s"res=$res")
+    println(s"res=$res")*/
+
+    Stream
+      .range(1, 6, 1)
+      .evalMap(i => Task.now(i))
+      .takeWhile(_ < 3)
+      .fold(0)(_ + _)
+      .compile
+      .last
+      .map(_.getOrElse(0))
+      .map(a => { println(a); a })
+      .runSyncUnsafe()
+
   }
 }
