@@ -23,8 +23,8 @@ object ProdApp extends IOApp {
       { IO.pure(Any.pack(p).toByteArray) }
     }
     val producerSettings = ProducerSettings[IO, String, GeneratedMessage](keySerializer = Serializer[IO, String], valueSerializer = valueS)
-      .withBootstrapServers("localhost:9093")
-    val s = Stream(4, 5, 6, 7)
+      .withBootstrapServers("localhost:9092")
+    val s = Stream(18, 19, 20, 21)
       .map(i =>
         if (i % 2 == 0)
           Person(s"Ilya$i", 123 * i, None, List(PhoneNumber("7900000001"), PhoneNumber("7900000002")))
@@ -33,9 +33,9 @@ object ProdApp extends IOApp {
       )
       .evalMap {
         case p: Person =>
-          IO(ProducerRecords.one(ProducerRecord("23marProto2", p.name, p).withHeaders(Headers(Header("p", "vvv")))))
+          IO(ProducerRecords.one(ProducerRecord("25jan21", p.name, p).withHeaders(Headers(Header("p", "vvv")))))
         case p: Person2 =>
-          IO(ProducerRecords.one(ProducerRecord("23marProto2", p.name, p).withHeaders(Headers(Header("p2", "vvv")))))
+          IO(ProducerRecords.one(ProducerRecord("25jan21", p.name, p).withHeaders(Headers(Header("p2", "vvv")))))
       }
       .through(produce[IO, String, GeneratedMessage, Unit](producerSettings))
     s.compile.drain.map(_ => ExitCode.Success)

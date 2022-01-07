@@ -28,6 +28,7 @@ libraryDependencies += "io.7mind.izumi" %% "distage-framework" % "0.10.19"
 //)
 //libraryDependencies ++= fs2Deps
 libraryDependencies += "io.monix" %% "monix" % "3.2.2"
+libraryDependencies += "dev.zio" %% "zio" % "1.0.8"
 // https://mvnrepository.com/artifact/com.github.fd4s/fs2-kafka
 libraryDependencies += "com.github.fd4s" %% "fs2-kafka" % "1.0.0"
 // https://mvnrepository.com/artifact/com.twitter/chill
